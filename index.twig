@@ -1,0 +1,121 @@
+<!-- Hinweise zum Template: Das index-Template unterscheidet sich von den anderen index-Templates, da es auf der     -->
+<!-- überaus wichtigen Startseite einen Querschnitt über den gesamtem Blog anzeigen soll (Sticky, Kategorie,....     -->
+<!-- Innerhalb einer Kategorie zeigt das index-Template dann spezifischere Informationen des Ordners an, in dem sich -->
+<!-- der Leser gerade befindet.                                                                                      -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ theme_url }}/css/style.css" type="text/css">
+</head>
+<body class="bg-dark text-light">
+
+
+
+
+
+	<!-- Heading -->
+    <div class="container-fluid bg-secondary py-3 -mb-5 text-light shadow-lg">
+        <div class="container">
+        	<div class="row">
+        		<div class="col-2 text-center">
+        			<img src="{{assets_url}}/oliver-lohse.png" class="img-fluid rounded" style="width: 80px;">
+        		</div>
+        		<div class="col-10 my-auto">
+            		<h1 class="fw-bold"><a href="/" class="text-light">{{site_title}}</a></h1>
+            	</div>
+            </div>
+        </div>
+    </div>
+
+
+    
+
+    
+    <!-- Social -->
+    <div class="container text-center fs-1 py-5">
+    	{% if config.theme_config.social.youtube   %} <a href="{{config.theme_config.social.youtube}}">  <i class="bi bi-youtube       m-1 text-light"></i></a> {% endif %}
+    	{% if config.theme_config.social.facebook  %} <a href="{{config.theme_config.social.facebook}}"> <i class="bi bi-facebook      m-1 text-light"></i></a> {% endif %}
+    	{% if config.theme_config.social.instagram %} <a href="{{config.theme_config.social.instagram}}"><i class="bi bi-instagram     m-1 text-light"></i></a> {% endif %}
+    	{% if config.theme_config.social.twitch    %} <a href="{{config.theme_config.social.twitch}}">   <i class="bi bi-twitch        m-1 text-light"></i></a> {% endif %}
+    	{% if config.theme_config.social.twitter   %} <a href="{{config.theme_config.social.twitter}}">  <i class="bi bi-twitter       m-1 text-light"></i></a> {% endif %}
+    	{% if config.theme_config.social.mail      %} <a href="mailto:{{config.theme_config.social.mail}}">     <i class="bi bi-envelope-fill m-1 text-light"></i></a> {% endif %}
+    	{% if config.theme_config.social.link      %} <a href="{{config.theme_config.social.link}}">     <i class="bi bi-link-45deg    m-1 text-light"></i></a> {% endif %}
+        {% if config.theme_config.social.github    %} <a href="{{config.theme_config.social.github}}">   <i class="bi bi-github        m-1 text-light"></i></a> {% endif %}
+    </div>
+    
+    
+    
+    
+    
+    <!-- Posts -->
+    <!-- Zeigt die Beiträge an, die in dem aktuellen Verzeichnis existieren (außer index.md). Da in jedem            -->
+    <!-- Verzeichnis auch beiträge liegen, muss keine Ausnahmeregelung, wie bei der Kategorie, entwickelt werden.    -->
+    <!-- Das Segment wird also in allen INDEX angezeigt.                                                             -->
+
+    <div class="container-fluid -py-5">
+        <div class="container g-0">
+			
+                <div class="row">
+                {% for page in pages(current_page.id, depth=0)|sort_by("time")|reverse if not page.hidden and page.meta.template != 'index' %}
+
+                    {% set size     = config.theme_config.logo.weights[loop.index-1]  %}
+                    {% set position = config.theme_config.logo.position[loop.index-1] %}
+                    {% set count    = loop.index-1                                    %}
+
+                    <div class="col-sm-{{ size }}" style="
+                        background-image:    url({{assets_url}}/{{config.theme_config.logo.overlay}}), url({{assets_url}}/{{page.meta.logo}}); 
+                        background-position: {{ position }}; 
+                        background-size:     cover; 
+                        height:              500px;">
+
+                        <div class="p-4 text-light">
+
+                            <a href="{{ page.url }}" title="{{ page.title }} [pos:{{ count }}, size:{{ size }}]"><h2 class="fw-bold mb-3 text-light textshadow">{{ page.title }}</h2></a>
+                            <hr>
+                            <p class="textshadow">{{ page.description|markdown }}</p>
+
+                            <!-- Button when 'CTA' filled -->
+                            {% if page.meta.CTA %}
+                                <a href="{{ page.meta.CTA.Link }}" target='new' class="btn btn-danger">{{ page.meta.CTA.Title }} &#187;</a>
+                            {% endif %}
+                            <!-- Button when 'CTA' filled -->
+
+							<!-- Bookmark when 'Sticky' true -->
+							{% if page.meta.Sticky %}
+								<p><i class="bi bi-bookmark-star-fill fs-2"></i></p>
+							{% endif %}	
+							<!-- Bookmark when 'Sticky' true -->
+
+                        </div>
+                        
+                    </div>
+                {% endfor %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Posts -->
+
+
+
+
+
+    <div class="container py-5">
+        <h2>{{current_page.title}}</h2>
+        <p class="lead">{{current_page.description}}</p>
+        {{content}}
+    </div>
+
+
+
+
+    
+</body>
+</html>
